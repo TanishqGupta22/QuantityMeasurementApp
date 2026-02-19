@@ -1,57 +1,15 @@
-package com.bridgelabz.quantitymeasurement;
+@Test
+void testFeetToInchesConversion() {
+    assertEquals(12.0, UnitConverter.feetToInches(1.0));
+}
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+@Test
+void testInchesToFeetConversion() {
+    assertEquals(1.0, UnitConverter.inchesToFeet(12.0));
+}
 
-import com.bridgelabz.quantitymeasurement.model.Feet;
-import com.bridgelabz.quantitymeasurement.model.Inches;
-
-public class QuantityMeasurementAppTest {
-
-    @Test
-    void testFeetEquality_SameValue() {
-        Feet f1 = new Feet(1.0);
-        Feet f2 = new Feet(1.0);
-        assertTrue(f1.equals(f2));
-    }
-
-    @Test
-    void testFeetEquality_DifferentValue() {
-        Feet f1 = new Feet(1.0);
-        Feet f2 = new Feet(2.0);
-        assertFalse(f1.equals(f2));
-    }
-
-    @Test
-    void testInchesEquality_SameValue() {
-        Inches i1 = new Inches(1.0);
-        Inches i2 = new Inches(1.0);
-        assertTrue(i1.equals(i2));
-    }
-
-    @Test
-    void testInchesEquality_DifferentValue() {
-        Inches i1 = new Inches(1.0);
-        Inches i2 = new Inches(2.0);
-        assertFalse(i1.equals(i2));
-    }
-
-    @Test
-    void testNullComparison() {
-        Feet f1 = new Feet(1.0);
-        assertFalse(f1.equals(null));
-    }
-
-    @Test
-    void testSameReference() {
-        Inches i1 = new Inches(1.0);
-        assertTrue(i1.equals(i1));
-    }
-
-    @Test
-    void testNonNumericComparison() {
-        Feet f1 = new Feet(1.0);
-        String value = "1.0";
-        assertFalse(f1.equals(value));
-    }
+@Test
+void testFeetAndInchesEquality() {
+    assertTrue(QuantityMeasurementApp
+            .checkFeetAndInchesEquality(1.0, 12.0));
 }

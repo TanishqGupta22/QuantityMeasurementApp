@@ -1,28 +1,27 @@
-package com.bridgelabz.quantitymeasurement;
-
-import com.bridgelabz.quantitymeasurement.model.Feet;
-import com.bridgelabz.quantitymeasurement.model.Inches;
+package com.quantity;
 
 public class QuantityMeasurementApp {
 
-    public static boolean checkFeetEquality(double value1, double value2) {
-        Feet feet1 = new Feet(value1);
-        Feet feet2 = new Feet(value2);
-        return feet1.equals(feet2);
+    public static boolean checkFeetEquality(double a, double b) {
+        Feet f1 = new Feet(a);
+        Feet f2 = new Feet(b);
+        return f1.equals(f2);
     }
 
-    public static boolean checkInchesEquality(double value1, double value2) {
-        Inches inch1 = new Inches(value1);
-        Inches inch2 = new Inches(value2);
-        return inch1.equals(inch2);
+    public static boolean checkInchesEquality(double a, double b) {
+        Inches i1 = new Inches(a);
+        Inches i2 = new Inches(b);
+        return i1.equals(i2);
+    }
+
+    public static boolean checkFeetAndInchesEquality(double feet, double inches) {
+        double convertedFeet = UnitConverter.feetToInches(feet);
+        return Double.compare(convertedFeet, inches) == 0;
     }
 
     public static void main(String[] args) {
 
-        System.out.println("Input: 1.0 inch and 1.0 inch");
-        System.out.println("Output: Equal (" + checkInchesEquality(1.0, 1.0) + ")");
-
-        System.out.println("Input: 1.0 ft and 1.0 ft");
-        System.out.println("Output: Equal (" + checkFeetEquality(1.0, 1.0) + ")");
+        System.out.println("1 ft == 12 inches : " +
+                checkFeetAndInchesEquality(1.0, 12.0));
     }
 }
