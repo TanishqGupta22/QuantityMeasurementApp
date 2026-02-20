@@ -1,27 +1,20 @@
-package com.quantity;
-
 public class QuantityMeasurementApp {
-
-    public static boolean checkFeetEquality(double a, double b) {
-        Feet f1 = new Feet(a);
-        Feet f2 = new Feet(b);
-        return f1.equals(f2);
-    }
-
-    public static boolean checkInchesEquality(double a, double b) {
-        Inches i1 = new Inches(a);
-        Inches i2 = new Inches(b);
-        return i1.equals(i2);
-    }
-
-    public static boolean checkFeetAndInchesEquality(double feet, double inches) {
-        double convertedFeet = UnitConverter.feetToInches(feet);
-        return Double.compare(convertedFeet, inches) == 0;
-    }
 
     public static void main(String[] args) {
 
-        System.out.println("1 ft == 12 inches : " +
-                checkFeetAndInchesEquality(1.0, 12.0));
+        System.out.println(
+            new QuantityLength(1.0, LengthUnit.YARDS)
+                .equals(new QuantityLength(3.0, LengthUnit.FEET))
+        );
+
+        System.out.println(
+            new QuantityLength(1.0, LengthUnit.YARDS)
+                .equals(new QuantityLength(36.0, LengthUnit.INCHES))
+        );
+
+        System.out.println(
+            new QuantityLength(1.0, LengthUnit.CENTIMETERS)
+                .equals(new QuantityLength(0.393701, LengthUnit.INCHES))
+        );
     }
 }
