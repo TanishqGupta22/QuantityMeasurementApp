@@ -1,15 +1,57 @@
-@Test
-void testFeetToInchesConversion() {
-    assertEquals(12.0, UnitConverter.feetToInches(1.0));
-}
+package com.quantity;
 
-@Test
-void testInchesToFeetConversion() {
-    assertEquals(1.0, UnitConverter.inchesToFeet(12.0));
-}
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-@Test
-void testFeetAndInchesEquality() {
-    assertTrue(QuantityMeasurementApp
-            .checkFeetAndInchesEquality(1.0, 12.0));
+class QuantityMeasurementAppTest {
+
+    private static final double EPSILON = 1e-6;
+
+    @Test
+    void testConversion_FeetToInches() {
+        assertEquals(12.0,
+                QuantityLength.convert(1.0, LengthUnit.FEET, LengthUnit.INCHES),
+                EPSILON);
+    }
+
+    @Test
+    void testConversion_YardsToFeet() {
+        assertEquals(9.0,
+                QuantityLength.convert(3.0, LengthUnit.YARDS, LengthUnit.FEET),
+                EPSILON);
+    }
+
+    @Test
+    void testConversion_InchesToYards() {
+        assertEquals(1.0,
+                QuantityLength.convert(36.0, LengthUnit.INCHES, LengthUnit.YARDS),
+                EPSILON);
+    }
+
+    @Test
+    void testEquality_CrossUnit() {
+        QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCHES);
+        assertTrue(feet.equals(inches));
+    }
+
+    @Test
+    void testZeroConversion() {
+        assertEquals(0.0,
+                QuantityLength.convert(0.0, LengthUnit.FEET, LengthUnit.INCHES),
+                EPSILON);
+    }
+
+    @Test
+    void testNegativeConversion() {
+        assertEquals(-12.0,
+                QuantityLength.convert(-1.0, LengthUnit.FEET, LengthUnit.INCHES),
+                EPSILON);
+    }
+
+    @Test
+    void testInvalidUnitThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                QuantityLength.convert(1.0, null, LengthUnit.FEET));
+    }
 }

@@ -1,20 +1,38 @@
+package com.quantity;
+
 public class QuantityMeasurementApp {
+
+    public static double demonstrateLengthConversion(
+            double value, LengthUnit from, LengthUnit to) {
+
+        return QuantityLength.convert(value, from, to);
+    }
+
+    public static double demonstrateLengthConversion(
+            QuantityLength quantity, LengthUnit to) {
+
+        return quantity.convertTo(to).getValue();
+    }
+
+    public static boolean demonstrateLengthEquality(
+            QuantityLength q1, QuantityLength q2) {
+
+        return q1.equals(q2);
+    }
 
     public static void main(String[] args) {
 
-        System.out.println(
-            new QuantityLength(1.0, LengthUnit.YARDS)
-                .equals(new QuantityLength(3.0, LengthUnit.FEET))
-        );
+        System.out.println("1 FEET → INCHES = " +
+                demonstrateLengthConversion(1.0, LengthUnit.FEET, LengthUnit.INCHES));
 
-        System.out.println(
-            new QuantityLength(1.0, LengthUnit.YARDS)
-                .equals(new QuantityLength(36.0, LengthUnit.INCHES))
-        );
+        System.out.println("3 YARDS → FEET = " +
+                demonstrateLengthConversion(3.0, LengthUnit.YARDS, LengthUnit.FEET));
 
-        System.out.println(
-            new QuantityLength(1.0, LengthUnit.CENTIMETERS)
-                .equals(new QuantityLength(0.393701, LengthUnit.INCHES))
-        );
+        System.out.println("36 INCHES → YARDS = " +
+                demonstrateLengthConversion(36.0, LengthUnit.INCHES, LengthUnit.YARDS));
+
+        QuantityLength length = new QuantityLength(1.0, LengthUnit.FEET);
+        System.out.println("1 FEET → CENTIMETERS = " +
+                demonstrateLengthConversion(length, LengthUnit.CENTIMETERS));
     }
 }
