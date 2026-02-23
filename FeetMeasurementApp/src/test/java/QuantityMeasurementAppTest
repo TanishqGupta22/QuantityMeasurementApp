@@ -1,57 +1,33 @@
-package com.quantity;
+@Test
+void testAddition_FeetPlusInches() {
+    QuantityLength result =
+            new QuantityLength(1.0, LengthUnit.FEET)
+                    .add(new QuantityLength(12.0, LengthUnit.INCHES));
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+    assertEquals(
+            new QuantityLength(2.0, LengthUnit.FEET),
+            result
+    );
+}
 
-class QuantityMeasurementAppTest {
+@Test
+void testAddition_Commutativity() {
+    QuantityLength a =
+            new QuantityLength(1.0, LengthUnit.FEET);
+    QuantityLength b =
+            new QuantityLength(12.0, LengthUnit.INCHES);
 
-    private static final double EPSILON = 1e-6;
+    assertEquals(a.add(b), b.add(a));
+}
 
-    @Test
-    void testConversion_FeetToInches() {
-        assertEquals(12.0,
-                QuantityLength.convert(1.0, LengthUnit.FEET, LengthUnit.INCHES),
-                EPSILON);
-    }
+@Test
+void testAddition_WithZero() {
+    QuantityLength result =
+            new QuantityLength(5.0, LengthUnit.FEET)
+                    .add(new QuantityLength(0.0, LengthUnit.INCHES));
 
-    @Test
-    void testConversion_YardsToFeet() {
-        assertEquals(9.0,
-                QuantityLength.convert(3.0, LengthUnit.YARDS, LengthUnit.FEET),
-                EPSILON);
-    }
-
-    @Test
-    void testConversion_InchesToYards() {
-        assertEquals(1.0,
-                QuantityLength.convert(36.0, LengthUnit.INCHES, LengthUnit.YARDS),
-                EPSILON);
-    }
-
-    @Test
-    void testEquality_CrossUnit() {
-        QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCHES);
-        assertTrue(feet.equals(inches));
-    }
-
-    @Test
-    void testZeroConversion() {
-        assertEquals(0.0,
-                QuantityLength.convert(0.0, LengthUnit.FEET, LengthUnit.INCHES),
-                EPSILON);
-    }
-
-    @Test
-    void testNegativeConversion() {
-        assertEquals(-12.0,
-                QuantityLength.convert(-1.0, LengthUnit.FEET, LengthUnit.INCHES),
-                EPSILON);
-    }
-
-    @Test
-    void testInvalidUnitThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                QuantityLength.convert(1.0, null, LengthUnit.FEET));
-    }
+    assertEquals(
+            new QuantityLength(5.0, LengthUnit.FEET),
+            result
+    );
 }

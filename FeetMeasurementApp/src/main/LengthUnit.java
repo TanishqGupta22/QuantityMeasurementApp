@@ -1,5 +1,3 @@
-package com.quantity;
-
 public enum LengthUnit {
 
     FEET(1.0),
@@ -13,7 +11,11 @@ public enum LengthUnit {
         this.toFeetFactor = toFeetFactor;
     }
 
-    public double getToFeetFactor() {
-        return toFeetFactor;
+    public double toBase(double value) {
+        return value * toFeetFactor;
+    }
+
+    public double fromBase(double valueInFeet) {
+        return valueInFeet / toFeetFactor;
     }
 }
