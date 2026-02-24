@@ -2,8 +2,6 @@ import java.util.Objects;
 
 public final class QuantityLength {
 
-    private static final double EPSILON = 1e-6;
-
     private final double value;
     private final LengthUnit unit;
 
@@ -23,48 +21,42 @@ public final class QuantityLength {
         return unit;
     }
 
-    public QuantityLength add(QuantityLength other) {
-        Objects.requireNonNull(other, "Second operand cannot be null");
-
-        double baseSum =
-                this.unit.toBase(this.value)
-              + other.unit.toBase(other.value);
-
-        double resultValue = this.unit.fromBase(baseSum);
-
-        return new QuantityLength(resultValue, this.unit);
+    /* ---------- UC6: implicit target (first operand) ---------- */
+    public static QuantityLength add(QuantityLength a, QuantityLength b) {
+        return add(a, b, a.unit);
     }
 
+    /* ---------- UC7: explicit target unit ---------- */
     public static QuantityLength add(
             QuantityLength a,
             QuantityLength b,
             LengthUnit targetUnit) {
 
-        if (a == null || b == null || targetUnit == null) {
-            throw new IllegalArgumentException("Null input");
-        }
+        validate(a, b, targetUnit);
 
-        double baseSum =
-                a.unit.toBase(a.value)
-              + b.unit.toBase(b.value);
+        double baseSum = toBase(a) + toBase(b);
+        double converted = targetUnit.fromBase(baseSum);
 
-        double result = targetUnit.fromBase(baseSum);
-        return new QuantityLength(result, targetUnit);
+        return new QuantityLength(round(converted), targetUnit);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof QuantityLength)) return false;
-        QuantityLength that = (QuantityLength) o;
+    /* ---------- private helpers ---------- */
+    private static double toBase(QuantityLength q) {
+        return q.unit.toBase(q.value);
+    }
 
-        double diff =
-                Math.abs(
-                        this.unit.toBase(this.value)
-                      - that.unit.toBase(that.value)
-                );
+    private static void validate(
+            QuantityLength a,
+            QuantityLength b,
+            LengthUnit targetUnit) {
 
-        return diff < EPSILON;
+        if (a == null || b == null || targetUnit == null) {
+            throw new IllegalArgumentException("Null argument not allowed");
+        }
+    }
+
+    private static double round(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 
     @Override

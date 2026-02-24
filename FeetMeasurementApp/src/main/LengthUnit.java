@@ -1,5 +1,4 @@
 public enum LengthUnit {
-
     FEET(1.0),
     INCHES(1.0 / 12.0),
     YARDS(3.0),
@@ -15,7 +14,7 @@ public enum LengthUnit {
         return value * toFeetFactor;
     }
 
-    public double fromBase(double valueInFeet) {
-        return valueInFeet / toFeetFactor;
+    public double fromBase(double baseValue) {
+        return baseValue / toFeetFactor;
     }
 }

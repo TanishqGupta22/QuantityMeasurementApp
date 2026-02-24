@@ -30,4 +30,3 @@ void testAddition_WithZero() {
             new QuantityLength(5.0, LengthUnit.FEET),
             result
     );
-}
