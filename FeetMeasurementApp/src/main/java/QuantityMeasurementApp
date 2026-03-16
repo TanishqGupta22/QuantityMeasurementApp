@@ -2,28 +2,37 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        System.out.println(
-                new QuantityLength(1.0, LengthUnit.FEET)
-                        .convertTo(LengthUnit.INCHES));
+        System.out.println("---- Weight Equality ----");
 
         System.out.println(
-                QuantityLength.add(
-                        new QuantityLength(1.0, LengthUnit.FEET),
-                        new QuantityLength(12.0, LengthUnit.INCHES),
-                        LengthUnit.FEET));
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM)
+                        .equals(new QuantityWeight(1000.0, WeightUnit.GRAM)));
 
         System.out.println(
-                new QuantityLength(36.0, LengthUnit.INCHES)
-                        .equals(new QuantityLength(1.0, LengthUnit.YARDS)));
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM)
+                        .equals(new QuantityWeight(2.20462, WeightUnit.POUND)));
+
+        System.out.println("---- Weight Conversion ----");
 
         System.out.println(
-                QuantityLength.add(
-                        new QuantityLength(1.0, LengthUnit.YARDS),
-                        new QuantityLength(3.0, LengthUnit.FEET),
-                        LengthUnit.YARDS));
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM)
+                        .convertTo(WeightUnit.GRAM));
 
         System.out.println(
-                new QuantityLength(2.54, LengthUnit.CENTIMETERS)
-                        .convertTo(LengthUnit.INCHES));
+                new QuantityWeight(2.0, WeightUnit.POUND)
+                        .convertTo(WeightUnit.KILOGRAM));
+
+        System.out.println("---- Weight Addition ----");
+
+        System.out.println(
+                QuantityWeight.add(
+                        new QuantityWeight(1.0, WeightUnit.KILOGRAM),
+                        new QuantityWeight(1000.0, WeightUnit.GRAM)));
+
+        System.out.println(
+                QuantityWeight.add(
+                        new QuantityWeight(1.0, WeightUnit.KILOGRAM),
+                        new QuantityWeight(1000.0, WeightUnit.GRAM),
+                        WeightUnit.GRAM));
     }
 }
