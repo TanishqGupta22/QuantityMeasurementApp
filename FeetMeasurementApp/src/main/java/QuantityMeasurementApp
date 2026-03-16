@@ -3,31 +3,27 @@ public class QuantityMeasurementApp {
     public static void main(String[] args) {
 
         System.out.println(
-            QuantityLength.add(
-                new QuantityLength(1.0, LengthUnit.FEET),
-                new QuantityLength(12.0, LengthUnit.INCHES),
-                LengthUnit.FEET)
-        );
+                new QuantityLength(1.0, LengthUnit.FEET)
+                        .convertTo(LengthUnit.INCHES));
 
         System.out.println(
-            QuantityLength.add(
-                new QuantityLength(1.0, LengthUnit.FEET),
-                new QuantityLength(12.0, LengthUnit.INCHES),
-                LengthUnit.INCHES)
-        );
+                QuantityLength.add(
+                        new QuantityLength(1.0, LengthUnit.FEET),
+                        new QuantityLength(12.0, LengthUnit.INCHES),
+                        LengthUnit.FEET));
 
         System.out.println(
-            QuantityLength.add(
-                new QuantityLength(1.0, LengthUnit.FEET),
-                new QuantityLength(12.0, LengthUnit.INCHES),
-                LengthUnit.YARDS)
-        );
+                new QuantityLength(36.0, LengthUnit.INCHES)
+                        .equals(new QuantityLength(1.0, LengthUnit.YARDS)));
 
         System.out.println(
-            QuantityLength.add(
-                new QuantityLength(2.54, LengthUnit.CENTIMETERS),
-                new QuantityLength(1.0, LengthUnit.INCHES),
-                LengthUnit.CENTIMETERS)
-        );
+                QuantityLength.add(
+                        new QuantityLength(1.0, LengthUnit.YARDS),
+                        new QuantityLength(3.0, LengthUnit.FEET),
+                        LengthUnit.YARDS));
+
+        System.out.println(
+                new QuantityLength(2.54, LengthUnit.CENTIMETERS)
+                        .convertTo(LengthUnit.INCHES));
     }
 }

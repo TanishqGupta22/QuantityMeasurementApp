@@ -3,7 +3,6 @@ package com.bridgelabz.quantitymeasurement.model;
 public class Inches {
 
     private final double value;
-
     public Inches(double value) {
         this.value = value;
     }
