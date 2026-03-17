@@ -1,4 +1,4 @@
-mport java.util.Objects;
+import java.util.Objects;
 
 public class Quantity<U extends IMeasurable> {
     private final double value;
@@ -46,6 +46,7 @@ public class Quantity<U extends IMeasurable> {
 
     private double operations(Quantity<U> other, ArithmeticOperation op){
         if(other == null) throw new IllegalArgumentException("Other quantity cannot be null");
+        this.unit.validOperationSupport(op.name());
         if(!this.unit.getClass().equals(other.unit.getClass())) throw new IllegalArgumentException("Incompatible measurement category");
 
         double base1 = this.toBaseValue();
