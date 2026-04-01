@@ -5,9 +5,9 @@ A Java application built using **Data Driven Testing (DDT)** that evolves from a
 ---
 
 ## 🚀 Tech Stack
-- Java 17
-- Maven
-- Spring Boot
+- Java 21
+- Maven 4.0
+- Spring Boot 3.5.12
 - Spring Data JPA
 - H2 Database
 - Spring Security (JWT + OAuth2)
