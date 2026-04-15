@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Complete Application Flow Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        .info { background-color: #d1ecf1; }
+        pre { background: #f8f9fa; padding: 10px; overflow-x: auto; }
+        button { padding: 8px 16px; margin: 5px; }
+        .result { margin: 10px 0; padding: 10px; border-left: 4px solid #007bff; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>Complete Application Flow Test</h1>
+    
+    <div class="test info">
+        <h3>Backend Configuration</h3>
+        <p><strong>Backend URL:</strong> http://localhost:8081</p>
+        <p><strong>Frontend URL:</strong> http://localhost:4200</p>
+        <p><strong>Test Purpose:</strong> Verify frontend-backend connectivity and functionality</p>
+    </div>
+    
+    <div class="test">
+        <h3>Test 1: Backend Connectivity</h3>
+        <button onclick="testBackendConnectivity()">Test Backend Connection</button>
+        <div id="backend-result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 2: Run Operation (Convert)</h3>
+        <button onclick="testRunOperation()">Test Convert Operation</button>
+        <div id="run-result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 3: User Signup</h3>
+        <button onclick="testSignup()">Test User Signup</button>
+        <div id="signup-result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 4: User Login</h3>
+        <button onclick="testLogin()">Test User Login</button>
+        <div id="login-result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 5: Authenticated Operation</h3>
+        <button onclick="testAuthenticatedOperation()">Test Authenticated Operation</button>
+        <div id="auth-result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 6: Complete Flow Summary</h3>
+        <button onclick="runCompleteFlow()">Run Complete Test Flow</button>
+        <div id="complete-result"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8081';
+        let authToken = null;
+        let testUsername = null;
+
+        function showResult(elementId, success, message, data = null) {
+            const element = document.getElementById(elementId);
+            element.className = 'test ' + (success ? 'success' : 'error');
+            element.innerHTML = `
+                <p><strong>${success ? 'SUCCESS' : 'ERROR'}:</strong> ${message}</p>
+                ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
+            `;
+        }
+
+        function testBackendConnectivity() {
+            fetch(`${API_BASE_URL}/actuator/health`)
+                .then(response => response.json())
+                .then(data => showResult('backend-result', true, 'Backend is running and accessible', data))
+                .catch(error => showResult('backend-result', false, `Backend connectivity failed: ${error.message}`));
+        }
+
+        function testRunOperation() {
+            const requestData = {
+                input1: {
+                    value: 1,
+                    unit: "METER"
+                },
+                input2: null,
+                meta: {
+                    measurementType: "LengthUnit",
+                    operationType: "CONVERT",
+                    resultUnit: "CENTIMETERS"
+                }
+            };
+            
+            fetch(`${API_BASE_URL}/api/v1/quantities/perform`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => showResult('run-result', true, 'Run operation successful', data))
+            .catch(error => showResult('run-result', false, `Run operation failed: ${error.message}`));
+        }
+
+        function testSignup() {
+            testUsername = 'testuser' + Date.now();
+            const requestData = {
+                username: testUsername,
+                password: "testpass123",
+                email: testUsername + "@test.com"
+            };
+            
+            fetch(`${API_BASE_URL}/api/v1/quantities/auth/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.text())
+            .then(data => showResult('signup-result', true, 'Signup successful', { username: testUsername, message: data }))
+            .catch(error => showResult('signup-result', false, `Signup failed: ${error.message}`));
+        }
+
+        function testLogin() {
+            if (!testUsername) {
+                showResult('login-result', false, 'Please run signup test first');
+                return;
+            }
+
+            const requestData = {
+                username: testUsername,
+                password: "testpass123"
+            };
+            
+            fetch(`${API_BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.text())
+            .then(data => {
+                authToken = data;
+                showResult('login-result', true, 'Login successful', { username: testUsername, token: data.substring(0, 50) + '...' });
+            })
+            .catch(error => showResult('login-result', false, `Login failed: ${error.message}`));
+        }
+
+        function testAuthenticatedOperation() {
+            if (!authToken) {
+                showResult('auth-result', false, 'Please run login test first');
+                return;
+            }
+
+            const requestData = {
+                input1: {
+                    value: 5,
+                    unit: "KILOGRAM"
+                },
+                input2: {
+                    value: 2,
+                    unit: "KILOGRAM"
+                },
+                meta: {
+                    measurementType: "WeightUnit",
+                    operationType: "ADD",
+                    resultUnit: "KILOGRAM"
+                }
+            };
+            
+            fetch(`${API_BASE_URL}/api/v1/quantities/perform`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => showResult('auth-result', true, 'Authenticated operation successful', data))
+            .catch(error => showResult('auth-result', false, `Authenticated operation failed: ${error.message}`));
+        }
+
+        async function runCompleteFlow() {
+            const results = [];
+            
+            try {
+                // Step 1: Test backend connectivity
+                const healthResponse = await fetch(`${API_BASE_URL}/actuator/health`);
+                const healthData = await healthResponse.json();
+                results.push({ step: 'Backend Connectivity', status: 'SUCCESS', data: healthData.status });
+
+                // Step 2: Test run operation (unauthenticated)
+                const convertResponse = await fetch(`${API_BASE_URL}/api/v1/quantities/perform`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        input1: { value: 1, unit: "METER" },
+                        input2: null,
+                        meta: { measurementType: "LengthUnit", operationType: "CONVERT", resultUnit: "CENTIMETERS" }
+                    })
+                });
+                const convertData = await convertResponse.json();
+                results.push({ step: 'Convert Operation', status: 'SUCCESS', data: convertData });
+
+                // Step 3: Test signup
+                testUsername = 'testuser' + Date.now();
+                const signupResponse = await fetch(`${API_BASE_URL}/api/v1/quantities/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: testUsername,
+                        password: "testpass123",
+                        email: testUsername + "@test.com"
+                    })
+                });
+                results.push({ step: 'User Signup', status: 'SUCCESS', data: 'User created' });
+
+                // Step 4: Test login
+                const loginResponse = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: testUsername,
+                        password: "testpass123"
+                    })
+                });
+                authToken = await loginResponse.text();
+                results.push({ step: 'User Login', status: 'SUCCESS', data: 'Token received' });
+
+                // Step 5: Test authenticated operation
+                const authResponse = await fetch(`${API_BASE_URL}/api/v1/quantities/perform`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        input1: { value: 5, unit: "KILOGRAM" },
+                        input2: { value: 2, unit: "KILOGRAM" },
+                        meta: { measurementType: "WeightUnit", operationType: "ADD", resultUnit: "KILOGRAM" }
+                    })
+                });
+                const authData = await authResponse.json();
+                results.push({ step: 'Authenticated Operation', status: 'SUCCESS', data: authData });
+
+                // Show complete results
+                const successCount = results.filter(r => r.status === 'SUCCESS').length;
+                const totalCount = results.length;
+                
+                document.getElementById('complete-result').className = 'test ' + (successCount === totalCount ? 'success' : 'error');
+                document.getElementById('complete-result').innerHTML = `
+                    <h4>Complete Flow Results: ${successCount}/${totalCount} tests passed</h4>
+                    ${results.map(r => `<div class="result"><strong>${r.step}:</strong> ${r.status} - ${JSON.stringify(r.data)}</div>`).join('')}
+                `;
+
+            } catch (error) {
+                showResult('complete-result', false, `Complete flow failed: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>

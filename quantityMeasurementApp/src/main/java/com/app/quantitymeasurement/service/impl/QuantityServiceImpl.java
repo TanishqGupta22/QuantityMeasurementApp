@@ -82,10 +82,13 @@ public class QuantityServiceImpl implements QuantityService {
         InputDTO q2 = input.getInput2();
         MetaDTO meta = input.getMeta();
 
-        String username = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
+        String username = "guest";
+        if (SecurityContextHolder.getContext() != null
+                && SecurityContextHolder.getContext().getAuthentication() != null
+                && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                && !"anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+            username = SecurityContextHolder.getContext().getAuthentication().getName();
+        }
 
         QuantityHistory history = new QuantityHistory();
 

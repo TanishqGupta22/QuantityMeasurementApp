@@ -1,0 +1,12 @@
+{
+  "input1": {
+    "value": 1,
+    "unit": "METER"
+  },
+  "input2": null,
+  "meta": {
+    "measurementType": "LengthUnit",
+    "operationType": "CONVERT",
+    "resultUnit": "CENTIMETERS"
+  }
+}
