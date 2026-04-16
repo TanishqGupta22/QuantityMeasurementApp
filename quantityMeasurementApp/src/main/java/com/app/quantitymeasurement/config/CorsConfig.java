@@ -12,7 +12,8 @@ public class CorsConfig implements WebMvcConfigurer {
                 // Allow any localhost port for Angular dev server.
                 .allowedOriginPatterns(
                         "http://localhost:*",
-                        "http://127.0.0.1:*"
+                        "http://127.0.0.1:*",
+                        "https://quantity-measurement-app-frontend-y-cyan.vercel.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
